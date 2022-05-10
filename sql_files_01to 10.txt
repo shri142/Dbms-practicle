@@ -1,0 +1,581 @@
+file - 01 
+
+use mysql;
+
+
+CREATE TABLE Dept(
+DID int(4),
+DName Varchar(10),
+Loc Varchar(10),
+MID int(4),
+PRIMARY KEY(DID)
+);
+
+drop table Dept;
+
+______________________________________________________
+
+file-02
+create database Ashish;   -- to create database
+
+use Ashish;              -- to connect with database
+
+-- Sql data Types;
+-- int 
+-- decimal (m,n)  here m is total number of digits and n is number of digits after the decimal
+-- varchar(10) 
+-- blob  --> binary large object (used to store large number of binary data)
+-- date  --> 'YYYY-MM-DD'
+-- timestamp --> 'YYYY-MM-DD HH:MM:SS'
+
+
+-- craeting database tables
+CREATE TABLE student (
+	student_id INT PRIMARY KEY,
+    student_name VARCHAR(20),
+    student_major VARCHAR(20)
+);
+
+-- Above table can also be defined in the following maner 
+CREATE TABLE student (
+	student_id INT ,
+    student_name VARCHAR(20),
+    student_major VARCHAR(20),
+    PRIMARY KEY(student_id)
+);
+
+
+
+DESC student;
+
+SELECT * FROM student;
+
+DROP TABLE student;
+
+ALTER TABLE student ADD gcpa DECIMAL(3,2);
+
+ALTER TABLE student DROP COLUMN gcpa;
+
+INSERT INTO student VALUES (1,'Jack','Biology');
+
+INSERT INTO student VALUES (2,'kete','Sociology');
+
+INSERT INTO student(student_id,student_name) VALUES (3,'claire');
+
+INSERT INTO student VALUES (4,'Jack','Biology');
+
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+TRUNCATE TABLE student;
+
+
+
+______________________________________________________
+file-03
+
+
+
+
+CREATE TABLE student(
+	student_id int PRIMARY KEY,
+    student_name VARCHAR(20) NOT NULL,
+    student_major VARCHAR(20)  -- unique
+);
+
+INSERT INTO student VALUES (1,'Jack','Biology');
+
+INSERT INTO student VALUES (2,'kete','Sociology');
+
+INSERT INTO student VALUES (3,null,'claire');
+
+INSERT INTO student VALUES (4,'Jack','Biology');
+
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+
+TRUNCATE TABLE student;
+
+DROP TABLE student;
+
+______________________________________________________
+file-04
+
+
+
+CREATE TABLE student(
+	student_id int PRIMARY KEY,
+    student_name VARCHAR(20) NOT NULL,
+    student_major VARCHAR(20) DEFAULT 'undecided'
+);
+
+INSERT INTO student VALUES (1,'Jack');   -- this will give an error
+
+INSERT INTO student (student_id,student_name) VALUES (7,'Oggy');
+
+INSERT INTO student VALUES (2,'kete','Sociology');
+
+INSERT INTO student VALUES (3,null,'claire');
+
+INSERT INTO student VALUES (4,'Jack','Biology');
+
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+
+DESC student;
+
+SELECT * FROM student;
+TRUNCATE TABLE student;
+
+DROP TABLE student;
+
+______________________________________________________
+
+file-05
+
+
+CREATE TABLE student(
+	student_id int AUTO_INCREMENT,
+    student_name VARCHAR(20) NOT NULL,
+    student_major VARCHAR(20),
+    PRIMARY KEY(student_id)
+);
+
+INSERT INTO student(student_name , student_major) VALUES ('Jack','Biology');
+
+INSERT INTO student(student_name , student_major) VALUES ('oggy','physics');
+
+INSERT INTO student VALUES (2,'kete','Sociology');
+
+INSERT INTO student VALUES (3,null,'claire');
+
+INSERT INTO student VALUES (4,'Jack','Biology');
+
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+
+TRUNCATE TABLE student;
+
+DROP TABLE student;
+
+SELECT * FROM student;
+______________________________________________________
+file-06
+
+CREATE TABLE student(
+	student_id int AUTO_INCREMENT,
+    student_name VARCHAR(20) NOT NULL,
+    student_major VARCHAR(20),
+    PRIMARY KEY(student_id)
+);
+
+
+INSERT INTO student VALUES (1,'Jack','Biology');
+
+INSERT INTO student VALUES (2,'kete','Sociology');
+
+INSERT INTO student VALUES (3,'champ','claire');
+
+INSERT INTO student VALUES (4,'Jack','Biology');
+
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+
+-- update statement 
+UPDATE student SET student_major = 'Bio' WHERE student_major = 'Biology';
+
+SELECT * FROM student;
+
+UPDATE student SET student_major = 'Bio',student_name = 'bob' WHERE student_major = 'Biology';
+
+
+-- delete 
+
+DELETE FROM student
+where student_id = 3;
+
+DELETE FROM student
+where student_id = 3 AND student_major = 'Biology';
+
+DELETE FROM student;         -- delete everything from the table 
+
+______________________________________________________
+file-07
+
+
+
+DROP TABLE student;
+
+CREATE TABLE student(
+	student_id int AUTO_INCREMENT,
+    student_name VARCHAR(20) NOT NULL,
+    student_major VARCHAR(20),
+    PRIMARY KEY(student_id)
+);
+
+INSERT INTO student VALUES (1,'Jack','Biology');
+INSERT INTO student VALUES (2,'kete','Sociology');
+INSERT INTO student VALUES (3,'claire','chemistry');
+INSERT INTO student VALUES (4,'Jack','Biology');
+INSERT INTO student VALUES (5,'Mike','Computer Science');
+
+SELECT * FROM student;
+
+SELECT student_id,student_name FROM student;
+
+SELECT student.student_id,student.student_name FROM student;
+
+SELECT * FROM student WHERE student_id = 2;
+
+SELECT student.student_name,student.student_major FROM student ORDER BY student_name;    -- Alpabetical order by default is accending 
+
+SELECT student.student_name,student.student_major FROM student ORDER BY student_name DESC;
+
+SELECT * FROM student ORDER BY student_major , student_id;
+
+SELECT * FROM student ORDER BY student_id DESC LIMIT 2;
+
+SELECT * FROM STUDENT 
+WHERE STUDENT_major = 'Biology';
+
+SELECT student_name , student_major FROM STUDENT 
+WHERE STUDENT_major = 'Biology';
+
+SELECT student_name , student_major FROM STUDENT 
+WHERE STUDENT_major = 'Biology' AND student_id = 3;
+
+SELECT student_name , student_major FROM STUDENT 
+WHERE STUDENT_major = 'Biology' OR student_id = 3;
+
+SELECT student_name , student_major FROM STUDENT 
+WHERE STUDENT_major IN ('Biology','Chemistry','Computer Science');
+-- note eqal to <>
+
+drop table student;
+
+
+DESC student;
+
+______________________________________________________
+file-08
+
+
+CREATE TABLE Employee(
+	emp_id INT PRIMARY KEY,
+    first_name VARCHAR(30),
+    last_name VARCHAR(30),
+    birth_date DATE,
+    sex VARCHAR(1),
+-- CHECK (sex ('M','F')),
+    salary INT,
+    super_id INT,
+    branch_id INT
+);
+
+CREATE TABLE Branch(
+	branch_id int PRIMARY KEY,
+    branch_name VARCHAR(30),
+    mgr_id INT,
+    mgr_start_date DATE,
+    FOREIGN KEY (mgr_id) REFERENCES Employee(emp_id) ON DELETE SET NULL
+);
+
+ALTER TABLE Employee ADD FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) ON DELETE SET NULL;
+
+ALTER TABLE Employee ADD FOREIGN KEY (super_id) REFERENCES Employee(emp_id) ON DELETE SET NULL;
+
+CREATE TABLE Client1(
+	client_id INT PRIMARY KEY,
+    client_name VARCHAR(30),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES Branch(branch_id) ON DELETE SET NULL
+);
+
+CREATE TABLE Works_with(
+	emp_id INT,
+    client_id INT,
+    total_sales INT,
+    PRIMARY KEY (emp_id,client_id),
+    FOREIGN KEY (emp_id) REFERENCES Employee(emp_id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES Client1(client_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Branch_supplier (
+  branch_id INT,
+  supplier_name VARCHAR(40),
+  supply_type VARCHAR(40),
+  PRIMARY KEY(branch_id, supplier_name),
+  FOREIGN KEY(branch_id) REFERENCES Branch(branch_id) ON DELETE CASCADE
+);
+
+
+SELECT * FROM Employee;
+SELECT * FROM Branch;
+SELECT * FROM Client1;
+SELECT * FROM Works_with;
+SELECT * FROM Branch_supplier;
+
+-- Corporate
+INSERT INTO employee VALUES(100, 'David', 'Wallace', '1967-11-17', 'M', 250000, NULL, NULL);
+
+INSERT INTO branch VALUES(1, 'Corporate', 100, '2006-02-09');
+
+UPDATE employee
+SET branch_id = 1
+WHERE emp_id = 100;
+
+INSERT INTO employee VALUES(101, 'Jan', 'Levinson', '1961-05-11', 'F', 110000, 100, 1);
+
+-- Scranton
+INSERT INTO employee VALUES(102, 'Michael', 'Scott', '1964-03-15', 'M', 75000, 100, NULL);
+
+INSERT INTO branch VALUES(2, 'Scranton', 102, '1992-04-06');
+
+UPDATE employee
+SET branch_id = 2
+WHERE emp_id = 102;
+
+INSERT INTO employee VALUES(103, 'Angela', 'Martin', '1971-06-25', 'F', 63000, 102, 2);
+INSERT INTO employee VALUES(104, 'Kelly', 'Kapoor', '1980-02-05', 'F', 55000, 102, 2);
+INSERT INTO employee VALUES(105, 'Stanley', 'Hudson', '1958-02-19', 'M', 69000, 102, 2);
+
+-- Stamford
+INSERT INTO employee VALUES(106, 'Josh', 'Porter', '1969-09-05', 'M', 78000, 100, NULL);
+
+INSERT INTO branch VALUES(3, 'Stamford', 106, '1998-02-13');
+
+UPDATE employee
+SET branch_id = 3
+WHERE emp_id = 106;
+
+INSERT INTO employee VALUES(107, 'Andy', 'Bernard', '1973-07-22', 'M', 65000, 106, 3);
+INSERT INTO employee VALUES(108, 'Jim', 'Halpert', '1978-10-01', 'M', 71000, 106, 3);
+
+-- BRANCH SUPPLIER
+INSERT INTO branch_supplier VALUES(2, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Patriot Paper', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'J.T. Forms & Labels', 'Custom Forms');
+INSERT INTO branch_supplier VALUES(3, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(3, 'Stamford Lables', 'Custom Forms');
+
+-- CLIENT
+INSERT INTO client1 VALUES(400, 'Dunmore Highschool', 2);
+INSERT INTO client1 VALUES(401, 'Lackawana Country', 2);
+INSERT INTO client1 VALUES(402, 'FedEx', 3);
+INSERT INTO client1 VALUES(403, 'John Daly Law, LLC', 3);
+INSERT INTO client1 VALUES(404, 'Scranton Whitepages', 2);
+INSERT INTO client1 VALUES(405, 'Times Newspaper', 3);
+INSERT INTO client1 VALUES(406, 'FedEx', 2);
+
+-- WORKS_WITH
+INSERT INTO works_with VALUES(105, 400, 55000);
+INSERT INTO works_with VALUES(102, 401, 267000);
+INSERT INTO works_with VALUES(108, 402, 22500);
+INSERT INTO works_with VALUES(107, 403, 5000);
+INSERT INTO works_with VALUES(108, 403, 12000);
+INSERT INTO works_with VALUES(105, 404, 33000);
+INSERT INTO works_with VALUES(107, 405, 26000);
+INSERT INTO works_with VALUES(102, 406, 15000);
+INSERT INTO works_with VALUES(105, 406, 130000);
+
+
+
+                   -- More basic Queries 
+
+-- find empolyee ordered by salary 
+SELECT * FROM Employee ORDER BY salary;
+
+-- Find all Employee ordered by sex and then name 
+
+SELECT * FROM Employee ORDER BY sex , First_name , Last_name;
+
+SELECT * FROM Employee LIMIT 5;
+
+SELECT first_name ,last_name FROM Employee;
+
+SELECT first_name AS forename ,last_name AS surname FROM Employee;
+
+-- Find out all the different genders 
+SELECT DISTINCT sex FROM Employee;
+-- DISTINCT IS THE SQL KEYWORD THAT USED TO FIND ALL THE DIFFERENT VALUES STORED IN THAT COLUMN
+
+
+
+
+
+											-- SQL FUNCTIONS 
+                                            
+-- Find the number of employees
+SELECT COUNT(emp_id) FROM Employee;
+
+-- Find the number of supervisors
+SELECT COUNT(super_id) FROM Employee;
+
+-- find the number of female employees born after 1970
+SELECT COUNT(emp_id) FROM Employee 
+WHERE sex = 'F' AND birth_date > '1970-01-01';
+
+-- find the avg of all employees salary
+SELECT AVG(salary) FROM Employee;
+
+-- find avg salary of all female employees
+SELECT AVG(salary) FROM Employee WHERE sex = 'f';
+
+-- find the sum of all employees salary 
+SELECT SUM(salary) FROM Employee;
+
+-- find the number of males and females
+SELECT COUNT(sex),sex FROM  Employee;
+
+
+SELECT COUNT(sex),sex FROM  Employee
+GROUP BY sex;
+
+-- find total sales of each salesman
+SELECT SUM(total_sales), emp_id FROM  Works_with GROUP BY emp_id;
+
+SELECT SUM(total_sales), client_id FROM  Works_with GROUP BY client_id;
+
+				-- wildcards
+                
+-- % = any # characters, _ = one character
+
+-- find the client who are an LLC
+
+SELECT * FROM Client1 WHERE client_name LIKE '%LCC';
+
+drop table Employee,Branch,Client1,Works_with,Branch_supplier;
+
+
+______________________________________________________
+file-09
+
+
+
+CREATE TABLE students(
+	st_id int primary key,
+	st_name varchar(100),
+	st_ph_no varchar(100),
+	branch varchar(5)
+);
+
+CREATE TABLE marks(
+mr_id int, 
+mark int, 
+foreign key(mr_id) references students(st_id)
+);
+
+insert into students values(11,'AAA','111...','comps');
+insert into students values(12,'BBB','222...','it');
+insert into students values(13,'CCC','333...','comps');
+insert into students values(14,'DDD','444...','it');
+insert into marks values(11,80);
+insert into marks values(12,50);
+insert into marks values(13,70);
+insert into marks values(14,90);
+
+desc table students;
+desc table marks;
+
+select * from students;
+select * from marks;
+
+select min(mark) from marks;
+
+select max(mark) from marks;
+
+select avg(mark) from marks;
+
+select count(mark) from marks;
+
+select count(st_id) from students where st_id > 102;
+
+select *from marks order by mark;
+
+select branch from students group by branch;
+
+drop table students;
+drop table marks;
+
+
+______________________________________________________
+file-10
+
+
+drop table employee;
+-- creating table employee
+CREATE TABLE employee(
+	emp_id INT NOT NULL,
+	irst_name VARCHAR(20),
+	last_name VARCHAR(100),
+	emp_salary int,
+	dep_id int,
+	PRIMARY KEY (emp_id)
+);
+
+-- creating Table depart
+CREATE TABLE department(
+	dep_id int,
+	dep_name VARCHAR(20),
+	manager_id int,
+	location_id int,
+	PRIMARY KEY (dep_id)
+);
+
+-- insering values in table employee
+insert into employee values (100,'erik','john',20000,12);
+insert into employee values (101,'steven','cohen',10000,10);
+insert into employee values (102,'edwin','thomas',15000,11);
+insert into employee values (103,'harry','potter',20000,12);
+
+
+-- insering values in table department
+insert into department values (10,"IT",200,1700);
+insert into department values (11,"Marketing",201,1800);
+insert into department values (13,"Resource",203,2400);
+insert into department values (14,"Shipping",121,1500);
+
+-- Iner join
+select e.emp_id,e.first_name,e.last_name,d.dep_id,d.dep_name
+from employee e
+inner join department d
+on e.dep_id = d.dep_id;
+
+-- Left join
+select e.emp_id,e.first_name,e.last_name,d.dep_id,d.dep_name
+from employee e
+left outer join department d
+on e.dep_id = d.dep_id;
+
+-- Right join
+select e.emp_id,e.first_name,e.last_name,d.dep_id,d.dep_name
+from employee e
+right join department d
+on e.dep_id = d.dep_id;
+
+-- full outer join
+select e.emp_id,e.first_name,e.last_name,d.dep_id,d.dep_name
+from employee e
+left join department d
+on e.dep_id = d.dep_id
+union
+select e.emp_id,e.first_name,e.last_name,d.dep_id,d.dep_name
+from employee e
+right join department d
+on e.dep_id=d.dep_id;
+
+-- Sql Subqueries
+-- Single row Sub-queries
+select * from employee
+where emp_salary = ( select avg(emp_salary) from employee);
+select * from employee
+where emp_salary > ( select avg(emp_salary) from employee);
+select * from employee
+where emp_salary < ( select avg(emp_salary) from employee);
+select * from employee;
+-- multi row sub-queries
+select * from employee
+where emp_salary in ( select max(emp_salary) from employee
+group by dep_id );
+select * from employee
+where emp_salary not in ( select max(emp_salary) from employee
+group by dep_id );
+
+
